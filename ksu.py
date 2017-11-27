@@ -30,20 +30,19 @@ words = word_tokenize(data)
 
 # we can use stop words to filter out common useless words that
 # are not important for text analysis
-def stop_wordz():
-	stop_words = set(stopwords.words('English'))
+
+stop_words = set(stopwords.words('English'))
 
 # create an empty list to which we'll add the relevant words that
 # are not in the stop_words set
-	filtered = []
+filtered = []
 
-	for word in words:
-		if word not in stop_words:
-			filtered.append(word)
-
-	fob = open('/Users/Mahmud/Desktop/nltk_output/stop_words.txt', 'w')
-	fob.write(str(filtered))
-	fob.close()
+for word in words:
+	if word not in stop_words:
+		filtered.append(word)
+fob = open('/Users/Mahmud/Desktop/nltk_output/stop_words.txt', 'w')
+fob.write(str(filtered))
+fob.close()
 
 # way of "normalisation" of a word, which gets rid of endings 
 # of words and keeps the root. This is important because 
@@ -97,6 +96,9 @@ def lemmatizee():
 	fob.write(str(lemma))
 	fob.close()
 
-
+stop_wordz()
+stemming()
+speech_tagger()
+lemmatizee()
 
 
