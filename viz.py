@@ -5,82 +5,84 @@ import os
 import csv
 import matplotlib.pyplot as plt
 import pandas as pd
+import glob
 
 # open a connection to the testing text file
-with open('/Users/Mahmud/Desktop/text.txt', 'r') as myfile:
-	data = myfile.read()
+
 
 # make a directory to put the files inside it
-path = '/Users/Mahmud/Desktop/nltk_output/csv' 
+path_csv = '/Users/Mahmud/Desktop/nltk_output/csv' 
 try: 
-    os.makedirs(path)
+    os.makedirs(path_csv)
 except OSError:
-    if not os.path.isdir(path):
+    if not os.path.isdir(path_csv):
         raise
 
-path = '/Users/Mahmud/Desktop/nltk_output/graphs' 
+path_graph = '/Users/Mahmud/Desktop/nltk_output/graphs' 
 try: 
-    os.makedirs(path)
+    os.makedirs(path_graph)
 except OSError:
-    if not os.path.isdir(path):
+    if not os.path.isdir(path_graph):
         raise
 
+number = 1
+path_file = '/Users/Mahmud/Desktop/test' 
+for infile in glob.glob(os.path.join(path_file, '*.txt')):
+  with open(infile, 'r') as myfile:
+    data = myfile.read()
 # separate the transcript by sentence
 # can also separate it by word, using word_tokenize
 # first index is the garbage, that needs to be cleaned
-words = word_tokenize(data)
+  words = word_tokenize(data)
 
-# we can use stop words to filter out common useless words that
-# are not important for text analysis
+  # we can use stop words to filter out common useless words that
+  # are not important for text analysis
 
-stop_words = set(stopwords.words('English'))
-# this code appends to the stopword list: 
-stop_words.update((',', '.', 'i', '>', '<', ':', '--', '- -', 'I', 'Thank'))
+  stop_words = set(stopwords.words('English'))
+  # this code appends to the stopword list: 
+  stop_words.update((',', '.', 'i', '>', '<', ':', '--', '- -', 'I', 'Thank'))
 
-# create an empty list to which we'll add the relevant words that
-# are not in the stop_words set
-filtered = []
+  # create an empty list to which we'll add the relevant words that
+  # are not in the stop_words set
+  filtered = []
 
-for word in words:
-	if word not in stop_words:
-		filtered.append(word)
+  for word in words:
+  	if word not in stop_words:
+  		filtered.append(word)
 
-n = 20
+  n = 20
 
-csv_file = csv.writer(open('/Users/Mahmud/Desktop/nltk_output/csv/word_frequencies.csv', 'w'))
+  csv_file = csv.writer(open('/Users/Mahmud/Desktop/nltk_output/csv/text'+str(number)+'.csv', 'w'))
 
-allWordDist = nltk.FreqDist(w.lower() for w in filtered)
-mostCommon= allWordDist.most_common(n)
-print(mostCommon)
+  allWordDist = nltk.FreqDist(w.lower() for w in filtered)
+  mostCommon= allWordDist.most_common(n)
 
-fdist = nltk.FreqDist(filtered)
+  fdist = nltk.FreqDist(filtered)
 
-keys = []
-counts = []
-index = []
-num = 0
-for key, count in mostCommon:
-   csv_file.writerow([key, count])
-   keys.append(key)
-   counts.append(count)
-   index.append(num)
-   num += 1
+  keys = []
+  counts = []
+  index = []
+  num = 0
+  for key, count in mostCommon:
+     csv_file.writerow([key, count])
+     keys.append(key)
+     counts.append(count)
+     index.append(num)
+     num += 1
 
-columns = [index, keys, counts]
-names = ['index', 'words', 'freq']
-dafr = dict(zip(names, columns))
-print(dafr)
-df = pd.DataFrame(dafr)
-# fdist.plot(n, cumulative=False, title="Frequency")
+  columns = [index, keys, counts]
+  names = ['index', 'words', 'freq']
+  dafr = dict(zip(names, columns))
+  df = pd.DataFrame(dafr)
+  # fdist.plot(n, cumulative=False, title="Frequency")
 
-df.to_csv('/Users/Mahmud/Desktop/nltk_output/csv/word_frequencies.csv')
+  df.to_csv('/Users/Mahmud/Desktop/nltk_output/csv/text'+str(number)+'.csv')
 
-df = pd.read_csv('/Users/Mahmud/Desktop/nltk_output/csv/word_frequencies.csv', index_col=0)
-print(df)
-
-# consider figsize parameter
-ax = df[['words','freq']].plot(kind='bar', x='words', y='freq', title ="20 Most Common Words", legend=True, fontsize=12)
-plt.savefig('/Users/Mahmud/Desktop/nltk_output/graphs/viz.png')
-plt.show()
+  df = pd.read_csv('/Users/Mahmud/Desktop/nltk_output/csv/text' +str(number)+'.csv', index_col=0)
+  
+  # consider figsize parameter
+  ax = df[['words','freq']].plot(kind='bar', x='words', y='freq', title ="20 Most Common Words", legend=True, fontsize=12)
+  plt.savefig('/Users/Mahmud/Desktop/nltk_output/graphs/test'+str(number)+'.png')
+  number += 1
 
 
