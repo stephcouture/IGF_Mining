@@ -26,7 +26,7 @@ except OSError:
         raise
 
 number = 1
-path_file = '/Users/Mahmud/Desktop/test' 
+path_file = '/Users/Mahmud/Desktop/PROJECT/files' 
 for infile in glob.glob(os.path.join(path_file, '*.txt')):
   with open(infile, 'r') as myfile:
     data = myfile.read()
@@ -40,7 +40,7 @@ for infile in glob.glob(os.path.join(path_file, '*.txt')):
 
   stop_words = set(stopwords.words('English'))
   # this code appends to the stopword list: 
-  stop_words.update((',', '.', 'i', '>', '<', ':', '--', '- -', 'I', 'Thank'))
+  stop_words.update((',', '.', 'i', '>', '<', ':', '--', '- -', 'I', 'Thank', '?', '!'))
 
   # create an empty list to which we'll add the relevant words that
   # are not in the stop_words set
