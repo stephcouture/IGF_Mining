@@ -7,9 +7,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import glob
 
-# open a connection to the testing text file
-
-
 # make a directory to put the files inside it
 path_csv = '/Users/Mahmud/Desktop/nltk_output/csv' 
 try: 
@@ -24,6 +21,10 @@ try:
 except OSError:
     if not os.path.isdir(path_graph):
         raise
+
+transcripts = os.listdir('/Users/Mahmud/Desktop/PROJECT/files')  
+index_begin = 1
+index_end = 2
 
 number = 1
 path_file = '/Users/Mahmud/Desktop/PROJECT/files' 
@@ -40,7 +41,7 @@ for infile in glob.glob(os.path.join(path_file, '*.txt')):
 
   stop_words = set(stopwords.words('English'))
   # this code appends to the stopword list: 
-  stop_words.update((',', '.', 'i', '>', '<', ':', '--', '- -', 'I', 'Thank', '?', '!'))
+  stop_words.update((',', '.', '>', '<', ':', '--', '- -'))
 
   # create an empty list to which we'll add the relevant words that
   # are not in the stop_words set
@@ -50,7 +51,7 @@ for infile in glob.glob(os.path.join(path_file, '*.txt')):
   	if word not in stop_words:
   		filtered.append(word)
 
-  n = 20
+  n = 15
 
   csv_file = csv.writer(open('/Users/Mahmud/Desktop/nltk_output/csv/text'+str(number)+'.csv', 'w'))
 
@@ -81,8 +82,19 @@ for infile in glob.glob(os.path.join(path_file, '*.txt')):
   df = pd.read_csv('/Users/Mahmud/Desktop/nltk_output/csv/text' +str(number)+'.csv', index_col=0)
   
   # consider figsize parameter
-  ax = df[['words','freq']].plot(kind='bar', x='words', y='freq', title ="20 Most Common Words", legend=True, fontsize=12)
+  ax = df[['words','freq']].plot(kind='bar', x='words', y='freq', figsize=(16,12), title ="15 Most Common Words", legend=True, fontsize=10)
   plt.savefig('/Users/Mahmud/Desktop/nltk_output/graphs/test'+str(number)+'.png')
+
+  old_file = '/Users/Mahmud/Desktop/nltk_output/graphs/test' + str(number) + '.png'
+  new_file = '/Users/Mahmud/Desktop/nltk_output/graphs/' + str(transcripts[index_begin:index_end]) + '.png'
+  os.rename(old_file, new_file)
+  print('renamed PNG' + str(number))
+
+  old_file_csv = '/Users/Mahmud/Desktop/nltk_output/csv/text' + str(number) + '.csv'
+  new_file_csv = '/Users/Mahmud/Desktop/nltk_output/csv/' + str(transcripts[index_begin:index_end]) + '.csv'
+  os.rename(old_file_csv, new_file_csv)
+  print('renamed CSV' + str(number))
+
   number += 1
-
-
+  index_begin += 1
+  index_end += 1
