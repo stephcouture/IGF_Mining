@@ -1,11 +1,14 @@
-import requests
+from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 import os
 
-# fetch the hyperlinks in the webpage of interest
-url = 'https://www.intgovforum.org/multilingual/igf-2016-transcripts-videos-reports'
-r = requests.get(url)
+# send a GET request, pose as a Mozilla Firefox agent
+url = 'http://www.intgovforum.org/multilingual/content/igf-2017-transcripts'
+headers={'User-Agent': 'Mozilla/5.0'}
+r = requests.get(url, headers=headers)
 html = r.text
+
+# convert html into BS object
 soup = BeautifulSoup(html, 'html.parser')
 hrefs = soup.find_all('a')
 
