@@ -1,4 +1,4 @@
-from urllib.request import Request, urlopen
+import requests
 from bs4 import BeautifulSoup
 import os
 
