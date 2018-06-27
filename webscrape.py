@@ -1,12 +1,21 @@
+
+# coding: utf-8
+
+# In[3]:
+
+
 import requests
 from bs4 import BeautifulSoup
 import os
 
 # send a GET request, pose as a Mozilla Firefox agent
-url = 'http://www.intgovforum.org/multilingual/content/igf-2017-transcripts'
+url = 'http://www.intgovforum.org/multilingual/igf-2017-transcripts'
 headers={'User-Agent': 'Mozilla/5.0'}
 r = requests.get(url, headers=headers)
+print (url)
+print (headers)
 html = r.text
+
 
 # convert html into BS object
 soup = BeautifulSoup(html, 'html.parser')
@@ -17,10 +26,11 @@ link_list = []
 for link in hrefs: 
 	links = link.get('href')
 	link_list.append(links)
+print (links)
 
 # identify the links of interest by examining the link_list
-begin = '/multilingual/content/igf-2016-day-0-room-10-bpf-on-cybersecurity-creating-spaces-for-multistakeholder-dialogue-in'
-end = '/multilingual/content/igf-2016-day-4-room-9-ws82-networks-solutions-to-achieve-sdgs-agenda-internet-at-play'
+begin = '/multilingual/content/igf-2017-day-0-salle-15-the-12th-annual-symposium-of-the-global-internet-governance-0'
+end = '/multilingual/content/igf-2017-day-4-room-xxvii-ws245-datafication-social-justice-what-challenges-for-internet'
 begin_index = link_list.index(begin)
 end_index = link_list.index(end)
 
@@ -31,7 +41,7 @@ revised_list = link_list[begin_index:end_index+1]
 # access those links later on, print the result in a new list
 final_links = []
 for item in revised_list:
-	url = 'https://www.intgovforum.org'
+	url = 'http://www.intgovforum.org'
 	concat = url + item
 	final_links.append(concat)
 
@@ -39,9 +49,11 @@ for item in revised_list:
 filenumber = 0 
 for url in final_links:
 	filenumber = filenumber + 1
-	r = requests.get(url)
+	r = requests.get(url, headers=headers)
+	print (url)
 	html = r.text
 	soup = BeautifulSoup(html, 'html.parser')
+
 
 # extract the JavaScript from the transcript and only leave the text
 	for script in soup(["script", "style"]):
@@ -57,7 +69,7 @@ for url in final_links:
 	text = str(text.encode('utf-8'))
 
 # write the final product to a text file: only works for the last link in the list
-	fob = open('/Users/Mahmud/Desktop/files/file_' + str(filenumber) + '.txt', 'w')
+	fob = open('/Users/oliviadziwak/Documents/Lab SC/2017/file_' + str(filenumber) + '.txt', 'w')
 	fob.write(text)
 	fob.close()
 	print('Extracted and wrote transcript ' + str(filenumber) + ' to text file')
@@ -81,6 +93,12 @@ for element in final_list:
 
 # rename the files appropriately by their names as appears on the link
 	file_num = file_num + 1
-	old_file = '/Users/Mahmud/Desktop/files/file_' + str(file_num) + '.txt'
-	new_file = '/Users/Mahmud/Desktop/files/' + str(result) + '.txt'
+	old_file = '/Users/oliviadziwak/Documents/Lab SC/2017/file_' + str(file_num) + '.txt'
+	new_file = '/Users/oliviadziwak/Documents/Lab SC/2017' + str(result) + '.txt'
 	os.rename(old_file, new_file)
+
+
+# In[2]:
+
+
+
